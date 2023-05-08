@@ -1,3 +1,6 @@
+#include <stdio.h>
+
+#include "lcstring.h"
 #include "file.h"
 
 FILE openFile(char* path)

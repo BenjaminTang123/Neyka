@@ -1,46 +1,30 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdbool.h>
+
 #include "tranquillity.h"
+#include "lcstring.h"
+#include "file.h"
 
-void deleteBlank(string* content)
-{
-    /* delete blank in code */
-    char* _content = content->stringContent;
-
-    string __content = initString();
-    short _stringMode = false;
-    short _commentMode = 0;
-    for (position i=0; _content[i]!='\0'; i++)
-    {
-        if (_content[i] == '"' && _content[i] == '\'' && _commentMode == 0) _stringMode = !_stringMode;
-        if (_content[i] == '/' && _content[i+1] == '/' && _stringMode == false && _commentMode == 0) _commentMode = 1;
-        if (_content[i] == '/' && _content[i+1] == '*' && _stringMode == false && _commentMode == 0) _commentMode = 2;
-        if (_content[i] == '*' && _content[i+1] == '/' && _stringMode == false && _commentMode == 2) { i += 2; _commentMode = 0;}
-        if (_content[i] == '\n' && _commentMode == 1) _commentMode = 0;
-        if (_commentMode == 0) addCharacter(&__content, _content[i]);
-    }
-    free(_content);
-    *content = __content;
-
-    replaceString(content, "\t", "");
-    replaceString(content, "\n", "");
-}
-
-void parseSourceFile(runningConfigure* configure)
+void parseSourceFile(string* workingDirectory, char* fileName)
 {
     // get source code
-    string _tmpPath = copyString(&configure->workingDirectory);
+    string _tmpPath = copyString(workingDirectory);
     addString(&_tmpPath, __PATH_SEPARATOR);
-    addString(&_tmpPath, configure->fileName);
+    addString(&_tmpPath, fileName);
+
     #ifdef __WINDOWS
     replaceString(&_tmpPath, __PATH_SEPARATOR, "/");
     #endif
-    printf("path: %s\n", _tmpPath.stringContent);
+
+    // printf("path: %s\n", _tmpPath.stringContent);
     FILE _f1 = openFile(_tmpPath.stringContent);
     string sourceCode = readFile(_f1);
     closeFile(_f1);
     free(_tmpPath.stringContent);
 
-    deleteBlank(&sourceCode);
-    /* delete blank in code */
+    // delete blank in code
     char* _content = sourceCode.stringContent;
 
     string __content = initString();
@@ -56,17 +40,18 @@ void parseSourceFile(runningConfigure* configure)
         if (_commentMode == 0) addCharacter(&__content, _content[i]);
     }
     free(_content);
-    *content = __content;
+    sourceCode = __content;
 
-    replaceString(content, "\t", "");
-    replaceString(content, "\n", "");
-
+    replaceString(&sourceCode, "\t", "");
+    replaceString(&sourceCode, "\n", "");
     printf("%s\n\n", sourceCode.stringContent);
 }
 
 int main(int argc, char **argv)
 {   
-    runningConfigure configure;
+    string workingDirectory;
+    char* intallerDirectory;
+    char* fileName;
 
     // get the working directory 
     char* buffer = (char*)malloc(200*sizeof(char));
@@ -76,15 +61,15 @@ int main(int argc, char **argv)
         fprintf(stderr, "DirectoryError: Unable to get current working directory\n");
         exit(1);
     }
-    configure.workingDirectory = initString();
-    addString(&configure.workingDirectory, buffer);
+    workingDirectory = initString();
+    addString(&workingDirectory, buffer);
     free(buffer);
 
     // get the file name to be run
     if (argc >= 2)
     {
-        configure.intallerDirectory = argv[0];
-        configure.fileName = argv[1];
+        intallerDirectory = argv[0];
+        fileName = argv[1];
     }
     else 
     {
@@ -92,7 +77,7 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    parseSourceFile(&configure);
+    parseSourceFile(&workingDirectory, fileName);
 
     return 0;
 }
