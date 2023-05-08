@@ -1,0 +1,42 @@
+import random as *;
+
+M = <> {
+    this.__init = (num) {
+        this._max = num;
+    }
+    this.judge() {
+        if (this.num == Random.create(1, this._max)) {
+            return true;
+        } else if (this.num == 666) {
+            return null;
+        } else {
+            return false;
+        }
+    }
+    this.get() {
+        while (true) {
+            try {
+                this.num = Int().toInt(input("Please enter a number: "));
+                break;
+            } catch {
+                print("It is not a number.");
+            }
+        }
+    }
+}
+
+print("Welcome to this game -- Guess what number it is");
+
+m = M(20);
+while (true) {
+    m.get();
+    if (m.judge() == true) {
+        print("Correct!");
+        break;
+    } else if (m.judge() == null) {
+        print("...6");
+        break;
+    } else {
+        print("Wrong. Please guess again.");
+    }
+}
