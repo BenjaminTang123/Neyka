@@ -1,0 +1,3 @@
+[submodule "tools/lightweight-cstring"]
+	path = tools/lightweight-cstring
+	url = git@github.com:RobotBenjaminTang/lightweight-cstring.git
