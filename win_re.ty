@@ -1,0 +1,31 @@
+// Here is another version code used by basic grammar
+
+// ([whether to run the code blank]) ([whether to run repeatedly]) ([code])
+// The two parentheses are optional
+(true)(false) import({
+    "system.symbol": "*",
+    "simpleGui": "sg",
+    "math": "math"
+});
+
+
+(true)(false) Win = Object::{
+    (true)(false) Win.__init = Function::(){
+        (true)(false) Win.win = sg.Windows(title="Test", weight=300);
+        (true)(false) Win.version = 3.10; 
+        (true)(false) $null; 
+    }
+    (true)(false )Win.tan = Function::(float::degree){
+        (degree%90==0)(false) $0;
+        (true)(false) $((degree*math.pi)/180);
+    }
+    (true)(false) Win.display = Function::(float::alpha, float::x, float:y){
+        (true)(false) k = Win.tan(alpha);
+        (true)(false) b = y-k*x;
+        (true)(false) Win.box(sg.Text("y={k}x+{b}".format(k, b)), font=Array::{"Microsoft Yahei", 12});
+        (true)(false) $null;   
+    }
+}
+
+(true)(false) win = Win.__instantiation();
+(true)(false) win.display();

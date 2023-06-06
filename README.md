@@ -1,2 +1,2 @@
 # Neyka
-A progamming language
+A simple progamming language.

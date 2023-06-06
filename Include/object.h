@@ -1,53 +1,44 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include <stdlib.h>
+#include <stdarg.h>
+#include "config.h"
 
-#include "lcstring.h"
+typedef struct ProcessingInCLanguage
+{    
+    bool CProcessing;
+    void (*Method)(int count, ...);
+} CProcessing;
 
-struct Object 
+struct Object
 {
-    char* className;
-    char* code;
-    string path;
-    struct Object* variablePool;
-    size_t variablePoolCapacity;
-    struct Object* inheriting;
-    bool floatingScopalityThis;
+    const char *objName;
+    struct Object *parent;
+    struct Object *base;
+    struct Object *member;
+    size_t memberCount;
+    char *doc;
+    char *code;
 };
+
 typedef struct Object Object;
 
-struct descriptor
-{
-    char* start;
-    char* value;
-    char* end;
-    struct descriptor* link;
-    Object* pointingClass;
-};
-typedef struct descriptor descr;
+#define OBJECT_HEAD Object head
 
-typedef struct DescriptorPool
+typedef struct Descriptor
 {
-    Object* HeadObject;
-    descr* pool;
-    unsigned short descrCount;
+    char *head;
+    char *centre;
+    char *end;
+    bool internalDescriptorProcessing;
+} descr;
+
+typedef struct
+{
+    OBJECT_HEAD;
+    descr* descriptor;
+    size_t descrCount;
 } DescriptorPool;
 
-#define Function Object
-#define Array Object
-#define String Object
-
-typedef struct Float
-{
-    Object* HeadObject;
-    double content;
-} Float;
-
-typedef struct Int
-{
-    Object* HeadObject;
-    long long int content;
-} Int;
 
 #endif

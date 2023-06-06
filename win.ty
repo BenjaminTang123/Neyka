@@ -1,0 +1,28 @@
+import({"system.symbol": "*"});
+import simpleGui as sg;
+import math;
+
+
+class Win = Object::
+{
+    function this.__init = ()
+    {
+        super(this).__init();
+        this.win = sg.Windows(title="Test", weight=300);
+        this.version = 3.10;
+    }
+    function this.tan = (float::degree)
+    {
+        if (degree%90 == 0) return 0;
+        return (degree*math.pi) / 180;
+    }
+    function this.display = (float::alpha, float::x, float::y)
+    {
+        k = this.tan(alpha);
+        b = y - k*x;
+        this.win.box(sg.Text(f"y={k}x+{b}", font=Array::{"Microsoft Yahei", 12}));
+    }
+}
+
+win = Win();
+win.display();
